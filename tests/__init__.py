@@ -1,6 +1,6 @@
 """
-Пакет для тестов по нашей программе
+Package for tests
 
-Этот модуль отвечает за тесты, чтобы можно было убеждаться,
-что все работает ещё до готового результата.
+This package is responsible for running tests to ensure
+that everything works properly even before the final result is ready.
 """
