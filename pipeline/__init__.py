@@ -1,8 +1,9 @@
 """
-Пакет конфигурации проекта
+Project configuration package
 
-Этот модуль отвечает за загрузку переменных окружения
-и предоставления безопасного доступа к настройкам приложения(Бд),
-а так же настройка количества батчей
+This module is responsible for loading environment variables
+and provisioning safely access to application settings(db),
+also  setting the batch count
 """
+
 from .config import *
