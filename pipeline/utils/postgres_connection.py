@@ -6,14 +6,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
 
 from pipeline.config import Settings
-from pipeline.utils.interfaces import DataBaseConnection
+from pipeline.interfaces.database_interfaces import DataBaseConnection
 
 logger = logging.getLogger(__name__)
 
 
 class DataBasePostgreSQLConnection(DataBaseConnection):
     """
-    Creating  context manager for connecting to the Docker PostgreSQL database
+    Creating  context manager for connecting to the Docker's PostgreSQL database
 
     This Class takes the settings parameters , and manages the database
     connection lifecycle (connects on enter , close on exit)
