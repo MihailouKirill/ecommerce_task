@@ -1,4 +1,7 @@
-class SQLQueryValidator:
+from pipeline.interfaces.database_interfaces import QueryValidatorPort
+
+
+class SQLQueryValidator(QueryValidatorPort):
     """
     Validates that a SQL query is a non-empty and starts with SELECT.
     """

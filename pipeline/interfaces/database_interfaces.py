@@ -5,7 +5,7 @@ from typing import Any
 
 class DataBaseConnection(ABC):
     """
-    Abstract class for creating the context manager for connecting to database
+    Interface for creating the context manager for connecting to database
     """
 
     @abstractmethod
@@ -19,4 +19,14 @@ class DataBaseConnection(ABC):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        pass
+
+
+class QueryValidatorPort(ABC):
+    """
+    Interface for validating SQL queries before execution.
+    """
+
+    @abstractmethod
+    def validate_query(self, query: str) -> str:
         pass

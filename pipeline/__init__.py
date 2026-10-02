@@ -1,9 +1,11 @@
 """
-Project configuration package
+Project main ETL pipeline package
 
-This module is responsible for loading environment variables
-and provisioning safely access to application settings(db),
-also  setting the batch count
+This package orchestrates the ETL pipeline, consists of :
+"Extractor" Component Package, "Transformer" Component Package,
+"Loader" Component Package, Shared, non-core utilities, and config
 """
 
-from .config import *
+from .config import Settings, app_settings
+
+__all__: list[str] = ["Settings", "app_settings"]
