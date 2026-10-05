@@ -1,4 +1,4 @@
-from pipeline.interfaces.database_interfaces import QueryValidatorPort
+from pipeline.ports.query_validator import QueryValidatorPort
 
 
 class SQLQueryValidator(QueryValidatorPort):

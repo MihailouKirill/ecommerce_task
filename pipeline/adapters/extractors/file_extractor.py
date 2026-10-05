@@ -6,16 +6,16 @@ from collections.abc import Generator
 
 import pandas as pd
 
-from pipeline.interfaces.batchers_interfaces import BatcherPort
-from pipeline.interfaces.extractors_interfaces import BaseExtractor
-from pipeline.interfaces.parsers_interfaces import BaseParser
-from pipeline.interfaces.readers_interfaces import FileReaderPort
+from pipeline.ports.batcher import BatcherPort
+from pipeline.ports.extractor import BaseExtractor
+from pipeline.ports.parser import BaseParser
+from pipeline.ports.readers import FileReaderPort
 
 
 class FileExtractor(BaseExtractor):
     """
     Reads data from files and yields it in batches as pandas DataFrames.
-    Not tied to any specific source — works through interfaces only.
+    Not tied to any specific source — works through ports only.
     """
 
     def __init__(
