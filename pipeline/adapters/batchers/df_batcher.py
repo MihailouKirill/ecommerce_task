@@ -2,7 +2,7 @@ from collections.abc import Generator, Iterable
 
 import pandas as pd
 
-from pipeline.interfaces.batchers_interfaces import BatcherPort
+from pipeline.ports.batcher import BatcherPort
 
 
 class DFBatcher(BatcherPort):
@@ -10,7 +10,7 @@ class DFBatcher(BatcherPort):
     Groups individual pandas DataFrames into batches of size batch_size.
     """
 
-    def __init__(self, batch_size:int)->None:
+    def __init__(self, batch_size: int) -> None:
         """
         Initializes batcher.
 
@@ -19,9 +19,7 @@ class DFBatcher(BatcherPort):
         """
         self.batch_size = batch_size
 
-    def batch(
-        self, items: Iterable[pd.DataFrame]
-    ) -> Generator[pd.DataFrame]:
+    def batch(self, items: Iterable[pd.DataFrame]) -> Generator[pd.DataFrame]:
         """
         Takes a list of pandas DataFrames and batches them into batches of size batch_size.
         Args:

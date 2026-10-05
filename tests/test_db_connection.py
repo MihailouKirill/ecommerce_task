@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from pipeline.utils.postgres_connection import DataBasePostgreSQLConnection
+from pipeline.adapters.database.postgres_connection import DataBasePostgreSQLConnection
 
 
 @pytest.fixture

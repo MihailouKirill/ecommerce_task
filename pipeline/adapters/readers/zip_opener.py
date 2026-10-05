@@ -4,7 +4,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import IO
 
-from pipeline.interfaces.readers_interfaces import FileReaderPort
+from pipeline.ports.readers import FileReaderPort
 
 
 class ZipOpener(FileReaderPort):

@@ -1,14 +1,13 @@
 from abc import ABC, abstractmethod
 from collections.abc import Generator
+from typing import Any
 
-import pandas as pd
 
-
-class BaseExtractor(ABC):
+class BaseExtractor[T](ABC):
     """
     Interface for data extractors
     """
 
     @abstractmethod
-    def extract(self) -> Generator[pd.DataFrame]:
+    def extract(self) -> Generator[T, Any, Any]:
         pass

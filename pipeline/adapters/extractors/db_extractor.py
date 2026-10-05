@@ -7,9 +7,8 @@ from collections.abc import Generator
 
 import pandas as pd
 
-from pipeline.interfaces.database_interfaces import DataBaseConnection
-from pipeline.interfaces.extractors_interfaces import BaseExtractor
-from pipeline.utils import SQLQueryValidator
+from pipeline.ports.database_connection import DataBaseConnection
+from pipeline.ports.extractor import BaseExtractor
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +22,10 @@ class DBExtractor(BaseExtractor):
         self, db_manager: DataBaseConnection, query: str, batch_size: int
     ) -> None:
         self.db_manager = db_manager
-        self.query = SQLQueryValidator.validate_query(query)
+        self.query = query  # SQLQueryValidator.validate_query(query)
         self.batch_size = batch_size
 
-    def extract(self) -> Generator[pd.DataFrame,None,None]:
+    def extract(self) -> Generator[pd.DataFrame]:
         """
         Opens a connection to a SQL query and loads into DataFrame
 

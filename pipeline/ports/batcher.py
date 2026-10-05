@@ -10,7 +10,5 @@ class BatcherPort(ABC):
     """
 
     @abstractmethod
-    def batch(
-        self, items: Iterable[pd.DataFrame]
-    ) -> Generator[pd.DataFrame]:
+    def batch(self, items: Iterable[pd.DataFrame]) -> Generator[pd.DataFrame]:
         pass

@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
 
 from pipeline.config import Settings
-from pipeline.interfaces.database_interfaces import DataBaseConnection
+from pipeline.ports.database_connection import DataBaseConnection
 
 logger = logging.getLogger(__name__)
 

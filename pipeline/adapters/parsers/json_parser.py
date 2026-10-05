@@ -2,7 +2,7 @@ from typing import IO
 
 import pandas as pd
 
-from pipeline.interfaces.parsers_interfaces import BaseParser
+from pipeline.ports.parser import BaseParser
 
 
 class PandasJsonParser(BaseParser):
