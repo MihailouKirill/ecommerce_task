@@ -6,7 +6,7 @@ import pandas as pd
 
 class BatcherPort(ABC):
     """
-    Interface for batching streams of DataFrames.
+    Port for grouping  DataFrames into batches.
     """
 
     @abstractmethod

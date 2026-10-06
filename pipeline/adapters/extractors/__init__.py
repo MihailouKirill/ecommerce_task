@@ -1,12 +1,13 @@
 """
-Extracts data from SQL query & from zip files
+Extractor adapters.
 
-Creates a class that connects to the PostgreSQL database and loads table into DataFrame, and
-Creates a class that can navigate the nested zip structure and loads all
-events into a single Pandas DataFrame.
+Concrete implementations for extracting data from external sources (databases, files).
 """
 
 from .db_extractor import DBExtractor
 from .file_extractor import FileExtractor
 
-__all__: list[str] = ["DBExtractor", "FileExtractor"]
+__all__: list[str] = [
+    "DBExtractor",
+    "FileExtractor"
+]

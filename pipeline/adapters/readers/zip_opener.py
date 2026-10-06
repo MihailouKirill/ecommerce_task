@@ -17,14 +17,16 @@ class ZipOpener(FileReaderPort):
         Initializes the ZipOpener with the target directory path.
 
         Args:
-            path (Path): Path to the directory containing outer ZIP archives.
+            path : Path to the directory containing outer ZIP archives.
         """
         self.path = path
 
     def open(self) -> Iterator[IO]:
         """
+        Processes nested ZIP archives and returns streams of the target files.
+
         Yields:
-            IO: An opened byte stream of the target file inside the zip archive
+            IO: An opened byte stream of the target file inside the zip archive.
         """
         # 1 Find all ZIP archives in the current directory
         for zip_file_path in self.path.glob("*.zip"):

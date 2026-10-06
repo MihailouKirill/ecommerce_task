@@ -5,11 +5,12 @@ from typing import Any
 
 class DataBaseConnection(ABC):
     """
-    Interface for creating the context manager for connecting to database
+    Port for database connection context manager.
     """
 
     @abstractmethod
     def __enter__(self) -> Any:
+        """Opens and returns the database connection."""
         pass
 
     @abstractmethod
@@ -19,4 +20,5 @@ class DataBaseConnection(ABC):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        """Commits or rolls back the transaction and closes the connection."""
         pass

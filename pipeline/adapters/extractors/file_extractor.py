@@ -1,5 +1,5 @@
 """
-Extracts data from nested zip files and load all events into a single Pandas DataFrame..
+File extraction adapter.
 """
 
 from collections.abc import Generator
@@ -25,9 +25,9 @@ class FileExtractor(BaseExtractor):
         Initializes the FileExtractor with required dependencies.
 
         Args:
-            opener: Opens and yield file stream
-            parser: Parses file streams into DataFrames
-            batcher: Groups single DataFrames into batches
+            opener: Opens and yields file stream.
+            parser: Parses file streams into DataFrames.
+            batcher: Groups single DataFrames into batches.
         """
         self.opener = opener
         self.parser = parser
@@ -35,10 +35,10 @@ class FileExtractor(BaseExtractor):
 
     def extract(self) -> Generator[pd.DataFrame]:
         """
-        Lazily reads files, parses their content, and yields data in batches
+        Lazily reads files, parses their content, and yields data in batches.
 
         Yields:
-            pd.DataFrame:a batched DataFrame ready for loading
+            pd.DataFrame:a batched DataFrame ready for transformation.
         """
         single_dfs = (self.parser.parse(stream) for stream in self.opener.open())
 
