@@ -1,11 +1,13 @@
 """
-Package for utils
+Package for utils.
 
-This package consists of postgres_connection.py - context manager for connecting to postgresql database +
-query_validator that validates SQL query
+Implementations for database connection management and query validation.
 """
 
 from pipeline.adapters.database.postgres_connection import DataBasePostgreSQLConnection
 from pipeline.adapters.database.query_validator import SQLQueryValidator
 
-__all__: list[str] = ["DataBasePostgreSQLConnection", "SQLQueryValidator"]
+__all__: list[str] = [
+    "DataBasePostgreSQLConnection",
+    "SQLQueryValidator"
+]

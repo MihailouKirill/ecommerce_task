@@ -12,22 +12,22 @@ class DFBatcher(BatcherPort):
 
     def __init__(self, batch_size: int) -> None:
         """
-        Initializes batcher.
+        Initializes  the batcher.
 
         Args:
-            batch_size: number of rows in each batch.
+            batch_size:Number of DataFrames to accumulate before concatenating.
         """
         self.batch_size = batch_size
 
     def batch(self, items: Iterable[pd.DataFrame]) -> Generator[pd.DataFrame]:
         """
-        Takes a list of pandas DataFrames and batches them into batches of size batch_size.
+        Takes a iterable of  DataFrames and batches them.
+
         Args:
             items: An iterable stream of single DataFrames.
 
         Yields:
-            pd.DataFrame: a batched DataFrame
-
+            pd.DataFrame:A concatenated batched DataFrame.
         """
         bucket = []
         for item in items:

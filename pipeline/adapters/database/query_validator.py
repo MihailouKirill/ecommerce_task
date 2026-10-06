@@ -12,10 +12,10 @@ class SQLQueryValidator(QueryValidatorPort):
         Validates and normalizes a SQL query.
 
         Args:
-            query: SQL query
+            query: SQL query.
 
         Returns:
-            stripped query(clean_query)
+            stripped query(clean_query).
         """
         clean_query = query.strip()
         if not clean_query:

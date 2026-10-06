@@ -1,5 +1,8 @@
 """
-Interfaces
+Ports for the ETL pipeline
+
+Each port defines a contract that adapters in "pipeline.adapters" must implement.
+The core layer depends only on these abstractions, not on concrete implementations.
 """
 
 from .batcher import BatcherPort
@@ -9,6 +12,7 @@ from .parser import BaseParser
 from .query_validator import QueryValidatorPort
 from .readers import FileReaderPort
 from .transformer import TransformerPort
+from .loader import LoaderPort
 
 __all__: list[str] = [
     "BaseExtractor",
@@ -18,4 +22,5 @@ __all__: list[str] = [
     "FileReaderPort",
     "QueryValidatorPort",
     "TransformerPort",
+    "LoaderPort"
 ]

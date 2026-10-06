@@ -1,8 +1,8 @@
 """
-File utility adapters for reading and parsing data.
+Reader adapters.
 
-This package contains infrastructure-specific implementations for
-file operations, such as ZIP archive traversal and JSON parsing.
+Concrete implementations for infrastructure file operations,
+such as directory traversal and nested ZIP archive handling.
 """
 
 from .zip_opener import ZipOpener

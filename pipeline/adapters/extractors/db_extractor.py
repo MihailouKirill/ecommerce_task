@@ -1,5 +1,5 @@
 """
-Extracts data from a SQL query and loads into DataFrame
+Database extraction adapter.
 """
 
 import logging
@@ -15,22 +15,30 @@ logger = logging.getLogger(__name__)
 
 class DBExtractor(BaseExtractor):
     """
-    Connects to a SQL query and loads into DataFrame
+    Extracts data from a database by executing a SQL query.
     """
 
     def __init__(
         self, db_manager: DataBaseConnection, query: str, batch_size: int
     ) -> None:
+        """
+        Initializes the database extractor.
+        
+        Args:
+            db_manager: context manager for  db connection.
+            query: SQL query to execute.
+            batch_size: Size of each batch.
+        """
         self.db_manager = db_manager
         self.query = query  # SQLQueryValidator.validate_query(query)
         self.batch_size = batch_size
 
     def extract(self) -> Generator[pd.DataFrame]:
         """
-        Opens a connection to a SQL query and loads into DataFrame
+        Executes the query and yields results in batches.
 
         Yields:
-            pd.DataFrame: A chunk of data from the SQL query
+            pd.DataFrame: A chunk of data from the database.
 
         """
         with self.db_manager as connection:
@@ -41,5 +49,5 @@ class DBExtractor(BaseExtractor):
                     yield chunk
 
             except Exception as e:
-                logger.warning(f"{e}")
+                logger.exception(f"{e}")
                 raise

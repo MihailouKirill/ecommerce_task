@@ -13,13 +13,15 @@ logger = logging.getLogger(__name__)
 
 class DataBasePostgreSQLConnection(DataBaseConnection):
     """
-    Creating  context manager for connecting to the Docker's PostgreSQL database
+    Creating  context manager for connecting to the Docker's PostgreSQL database.
 
     This Class takes the settings parameters , and manages the database
-    connection lifecycle (connects on enter , close on exit)
+    connection lifecycle (connects on enter , close on exit).
+    Guarantees that the connection is properly closed on exiting the
+    `with` block, even if an exception occurs inside it.
 
     Args:
-        settings_param(Settings): Database settings passed from the config file
+        settings_param(Settings): Database settings passed from the config file.
     """
 
     def __init__(self, settings_param: Settings) -> None:
@@ -29,14 +31,14 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
             f"{settings_param.db_port}/{settings_param.db_name}"
         )
         self.engine: Engine = create_engine(self.db_url)
-        self.connection: Any = None
+        self.connection: Connection | None = None
 
     def __enter__(self) -> Connection:
         """
-        Establishes the database connection and creates
+        Establishes the database connection and creates.
 
         Returns:
-            connection: Connection to the database
+            connection: Connection to the database.
         """
         self.connection = self.engine.connect()
 
@@ -51,12 +53,12 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
         exc_tb: TracebackType | None,
     ) -> None:
         """
-        Correctly close the connection to the database
+        Correctly close the connection to the database.
 
         Args:
-            exc_type: type of exception
-            exc_val: copy of exception
-            exc_tb: contains info about  the call stack
+            exc_type: type of exception.
+            exc_val: copy of exception.
+            exc_tb: contains info about  the call stack.
         """
         try:
             if exc_type is None:
@@ -69,3 +71,4 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
                 self.connection.rollback()
         finally:
             self.connection.close()
+
