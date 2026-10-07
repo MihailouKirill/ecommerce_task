@@ -11,4 +11,3 @@ class QueryValidatorPort(ABC):
         """
         Validates and returns the cleaned SQL query.
         """
-        pass

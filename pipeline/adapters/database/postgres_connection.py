@@ -1,6 +1,5 @@
 import logging
 from types import TracebackType
-from typing import Any
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
@@ -71,4 +70,3 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
                 self.connection.rollback()
         finally:
             self.connection.close()
-

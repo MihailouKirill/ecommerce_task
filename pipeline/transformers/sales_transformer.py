@@ -8,7 +8,7 @@ class PurchasesTransformer(TransformerPort):
     Filters the events DataFrame to get only purchase events.
     """
 
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Filters the Dataframe where event_type is 'purchase'.
 

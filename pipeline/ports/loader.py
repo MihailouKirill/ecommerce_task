@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 import pandas as pd
+
 
 class LoaderPort(ABC):
     """
@@ -7,11 +9,10 @@ class LoaderPort(ABC):
     """
 
     @abstractmethod
-    def load(self,df: pd.DataFrame) -> None :
+    def load(self, df: pd.DataFrame) -> None:
         """
         Saves the final DataFrame.
 
         Args:
             df:Processed DataFrame to save.
         """
-        pass

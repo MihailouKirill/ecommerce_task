@@ -19,7 +19,7 @@ class JoinTransformer(TransformerPort):
         self.products_df = products_df
         self.customers_df = customers_df
 
-    def transform(self, events_df: pd.DataFrame) -> pd.DataFrame:
+    def __call__(self, events_df: pd.DataFrame) -> pd.DataFrame:
         """
         Enriches events with product and customer reference data.
 

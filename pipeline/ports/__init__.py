@@ -8,11 +8,11 @@ The core layer depends only on these abstractions, not on concrete implementatio
 from .batcher import BatcherPort
 from .database_connection import DataBaseConnection
 from .extractor import BaseExtractor
+from .loader import LoaderPort
 from .parser import BaseParser
 from .query_validator import QueryValidatorPort
 from .readers import FileReaderPort
 from .transformer import TransformerPort
-from .loader import LoaderPort
 
 __all__: list[str] = [
     "BaseExtractor",
@@ -20,7 +20,7 @@ __all__: list[str] = [
     "BatcherPort",
     "DataBaseConnection",
     "FileReaderPort",
+    "LoaderPort",
     "QueryValidatorPort",
     "TransformerPort",
-    "LoaderPort"
 ]

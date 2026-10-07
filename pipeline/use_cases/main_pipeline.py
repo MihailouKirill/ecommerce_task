@@ -1,79 +1,89 @@
 """
 Main ETL pipeline orchestration.
 """
-from pipeline.adapters.database import DataBasePostgreSQLConnection, SQLQueryValidator
-from pipeline.config import app_settings
-from pipeline.adapters.extractors import DBExtractor,FileExtractor
-from pipeline.adapters.readers import ZipOpener
-from pipeline.adapters.parsers import PandasJsonParser
-from pipeline.adapters.batchers import DFBatcher
-from pipeline.adapters.transformers import JoinTransformer ,PurchasesTransformer, RevenueTransformer, AggregateTransform
-from pipeline.adapters.loaders import FileLoader
 
-from pathlib import Path
 import pandas as pd
-def run_pipeline():
+
+from pipeline.ports.extractor import BaseExtractor
+from pipeline.ports.loader import LoaderPort
+from pipeline.ports.use_case import UseCasePort
+from pipeline.transformers import (
+    AggregateTransform,
+    FinalTransformer,
+    JoinTransformer,
+    PurchasesTransformer,
+    RevenueTransformer,
+)
+
+
+class SalesReportUseCase(UseCasePort):
     """
-        Executes the complete ETL pipeline for sales data.
+    Orchestrates the ETL pipeline to generate the sales report.
 
-        Extracts dimensions from DB, processes event batches lazily,
-        performs  aggregation, and loads the final report.
+    This class acts as the core Use Case coordinator. It receives all necessary
+    extractors and loaders via Dependency Injection, ensuring the business logic
+    remains.
+    """
+
+    def __init__(
+        self,
+        events_extractor: BaseExtractor,
+        products_extractor: BaseExtractor,
+        customer_extractor: BaseExtractor,
+        loader: LoaderPort,
+    ):
         """
-    db_connection = DataBasePostgreSQLConnection(app_settings)
-    validator = SQLQueryValidator()
+        Initialises the use case with required dependencies.
 
-    products_data_from_db = DBExtractor(
-            db_connection,
-            validator.validate_query("SELECT * FROM products"),
-            app_settings.batch_size
-        )
+        Args:
+            events_extractor: extractor for reading events data in batches.
+            products_extractor: extractor for product reference data.
+            customer_extractor: extractor for customer reference data.
+            loader: loader for saving the finalized report.
+        """
+        self.events_extractor = events_extractor
+        self.products_extractor = products_extractor
+        self.customer_extractor = customer_extractor
+        self.loader = loader
 
-    customers_data_from_db = DBExtractor(
-            db_connection,
-            validator.validate_query("SELECT * FROM customers"),
-            app_settings.batch_size
-        )
+    def execute(self) -> None:
+        """
+        Executes the ETL pipeline.
 
-    products_df = pd.concat(products_data_from_db.extract(),ignore_index=True)
-    customers_df = pd.concat(customers_data_from_db.extract(),ignore_index=True)
+        Steps performed:
+            1. extracts static reference data into memory.
+            2. initializes transformers (business rules).
+            3. batch processing: reads events in batches and applies sequential transformations.
+            4. final aggregation: concatenates chunks and applies final aggregations.
+            5. load phase: persists the finalized report.
+        """
+        # 1. Load reference data
+        products_df = pd.concat(self.products_extractor.extract(), ignore_index=True)
+        customers_df = pd.concat(self.customer_extractor.extract(), ignore_index=True)
 
-    zip_opener = ZipOpener(path=Path(__file__).resolve().parents[2]/"data")
-    json_parser = PandasJsonParser()
-    batcher =DFBatcher(app_settings.batch_size)
+        # 2. Initialize business rules (Transformers)
+        join_transformer = JoinTransformer(products_df, customers_df)
+        purchases_transformer = PurchasesTransformer()
+        revenue_transformer = RevenueTransformer()
+        aggregate_transformer = AggregateTransform()
+        final_transformer = FinalTransformer()
 
-    events_data_from_file = FileExtractor(
-            zip_opener,
-            json_parser,
-            batcher
-        )
-    join_transformer = JoinTransformer(products_df,customers_df)
-    purchases_transformer=PurchasesTransformer()
-    revenue_transformer = RevenueTransformer()
-    aggregate_transformer = AggregateTransform()
+        # 3. Stream and process event batches
+        events_df_generator = self.events_extractor.extract()
+        all_batches = []
 
-    events_df_generator = events_data_from_file.extract()
+        for batch_df in events_df_generator:
+            filtered_event = purchases_transformer(batch_df)
+            joined_df = join_transformer(filtered_event)
+            enriched_event = revenue_transformer(joined_df)
+            transformed_df = aggregate_transformer(enriched_event)
+            all_batches.append(transformed_df)
 
-    all_batches=[]
-    for batch_df in events_df_generator:
-        filtered_event = purchases_transformer.transform(batch_df)
-        joined_df = join_transformer.transform(filtered_event)
-        enriched_event = revenue_transformer.transform(joined_df)
-        transformed_df = aggregate_transformer.transform(enriched_event)
-        all_batches.append(transformed_df)
+        # 4. Concatenate and perform final aggregation
+        if not all_batches:
+            return
+        final_raw_df = pd.concat(all_batches, ignore_index=True)
+        final_df = final_transformer(final_raw_df)
 
-    final_raw_df = pd.concat(all_batches,ignore_index=True)
-
-    final_df = final_raw_df.groupby(
-        ["category", "segment"],as_index=False).agg(
-        total_revenue=("total_revenue", "sum"),
-        units_sold=("units_sold", "sum"),
-        unique_customers=("customer_id", "nunique")
-    )
-
-    final_df = final_df.rename(columns={"segment": "customer_segment"})
-    final_df["total_revenue"] = final_df["total_revenue"].round(2)
-    final_df["units_sold"]=final_df["units_sold"].astype(int)
-    final_df = final_df
-
-    FileLoader(Path('reports/sales_report.csv')).load(final_df)
-
+        # 5. Load Phase: Save the report
+        self.loader.load(final_df)

@@ -1,5 +1,8 @@
 """
-Module for testing the postgresql connection .
+Module for testing the PostgreSQL connection adapter.
+
+Ensures that the context manager correctly handles commits on success
+and rollbacks on failure.
 """
 
 from unittest.mock import MagicMock, patch
@@ -26,7 +29,7 @@ def fake_settings() -> MagicMock:
     return settings
 
 
-@patch("pipeline.utils.postgres_connection.create_engine")
+@patch("pipeline.adapters.database.postgres_connection.create_engine")
 def test_success_connection(
     mock_create_engine: MagicMock, fake_settings: MagicMock
 ) -> None:
@@ -51,7 +54,7 @@ def test_success_connection(
     mock_conn.close.assert_called_once()
 
 
-@patch("pipeline.utils.postgres_connection.create_engine")
+@patch("pipeline.adapters.database.postgres_connection.create_engine")
 def test_failure_connection(
     mock_create_engine: MagicMock, fake_settings: MagicMock
 ) -> None:
