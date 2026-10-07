@@ -23,7 +23,7 @@ class DBExtractor(BaseExtractor):
     ) -> None:
         """
         Initializes the database extractor.
-        
+
         Args:
             db_manager: context manager for  db connection.
             query: SQL query to execute.

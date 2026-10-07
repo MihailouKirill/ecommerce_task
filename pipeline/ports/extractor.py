@@ -13,4 +13,3 @@ class BaseExtractor[T](ABC):
         """
         Yields extracted data item by item.
         """
-        pass

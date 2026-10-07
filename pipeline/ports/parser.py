@@ -8,9 +8,9 @@ class BaseParser(ABC):
     """
     Port for parsing file streams into pandas DataFrames.
     """
+
     @abstractmethod
     def parse(self, file_stream: IO) -> pd.DataFrame:
         """
         Converts a raw file stream into a DataFrame.
         """
-        pass

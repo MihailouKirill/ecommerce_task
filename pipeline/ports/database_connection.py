@@ -11,7 +11,6 @@ class DataBaseConnection(ABC):
     @abstractmethod
     def __enter__(self) -> Any:
         """Opens and returns the database connection."""
-        pass
 
     @abstractmethod
     def __exit__(
@@ -21,4 +20,3 @@ class DataBaseConnection(ABC):
         exc_tb: TracebackType | None,
     ) -> None:
         """Commits or rolls back the transaction and closes the connection."""
-        pass

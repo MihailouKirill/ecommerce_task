@@ -1,7 +1,7 @@
 [project]
 name = "ecommerce-task"
 version = "0.1.0"
-description = "Add your description here"
+description = "ETL pipeline for e-commerce sales data processing"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
@@ -14,3 +14,6 @@ dependencies = [
     "ruff>=0.16.9",
     "sqlalchemy>=2.1.1",
 ]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pipeline*"]

@@ -8,7 +8,7 @@ class AggregateTransform(TransformerPort):
     Aggregates metrics by products category and customer segment.
     """
 
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Calculates total revenue, units_sold, and unique_customers per group.
 
@@ -22,7 +22,7 @@ class AggregateTransform(TransformerPort):
         if df.empty:
             return df
         df = (
-            df.groupby(["category", "segment","customer_id"])
+            df.groupby(["category", "segment", "customer_id"])
             .agg(
                 total_revenue=("total_revenue", "sum"),
                 units_sold=("quantity", "sum"),

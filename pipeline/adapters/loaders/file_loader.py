@@ -1,12 +1,16 @@
-from pipeline.ports.loader import LoaderPort
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+
+from pipeline.ports.loader import LoaderPort
+
+
 class FileLoader(LoaderPort):
     """
     Adapter for saving a DataFrame to CSV file.
     """
 
-    def __init__(self,output_path:Path)->None:
+    def __init__(self, output_path: Path) -> None:
         """
         Initialize the FileLoader.
 
@@ -15,7 +19,7 @@ class FileLoader(LoaderPort):
         """
         self.output_path = output_path
 
-    def load(self,df:pd.DataFrame) -> None:
+    def load(self, df: pd.DataFrame) -> None:
         """
         Creates the target directory if needed and saves the DataFrame.
 
@@ -25,4 +29,4 @@ class FileLoader(LoaderPort):
         # Ensure the target directory exists (e.g. `reports/`).
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        df.to_csv(self.output_path,index=False)
+        df.to_csv(self.output_path, index=False)

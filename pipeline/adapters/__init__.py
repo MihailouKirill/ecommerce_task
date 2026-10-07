@@ -17,12 +17,18 @@ Adapters:
     PurchasesTransformer: filters events to include only purchases.
 """
 
+from pipeline.transformers import (
+    AggregateTransform,
+    JoinTransformer,
+    PurchasesTransformer,
+    RevenueTransformer,
+)
+
 from .batchers import DFBatcher
-from .database import DataBasePostgreSQLConnection,SQLQueryValidator
+from .database import DataBasePostgreSQLConnection, SQLQueryValidator
 from .extractors import DBExtractor, FileExtractor
 from .parsers import PandasJsonParser
 from .readers import ZipOpener
-from .transformers import AggregateTransform,JoinTransformer,RevenueTransformer,PurchasesTransformer
 
 __all__: list[str] = [
     "AggregateTransform",
@@ -35,5 +41,5 @@ __all__: list[str] = [
     "PurchasesTransformer",
     "RevenueTransformer",
     "SQLQueryValidator",
-    "ZipOpener"
+    "ZipOpener",
 ]

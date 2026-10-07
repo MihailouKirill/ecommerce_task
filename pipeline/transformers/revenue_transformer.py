@@ -7,7 +7,8 @@ class RevenueTransformer(TransformerPort):
     """
     Calculates the total revenue for each event.
     """
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Multiplies quantity and price to compute total revenue.
 

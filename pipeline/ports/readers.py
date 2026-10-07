@@ -13,4 +13,3 @@ class FileReaderPort(ABC):
         """
         Opens the source and yields raw file stream.
         """
-        pass
