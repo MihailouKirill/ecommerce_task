@@ -15,7 +15,7 @@ The project strictly follows Clean Architecture to separate business logic from 
 
 - **`pipeline/ports/`**: Interfaces defining contracts for extractors, loaders, transformers, and database connections.
 - **`pipeline/adapters/`**: Infrastructure layer implementations. Contains DB extractors, file loaders, parsers, and batchers.
-  - **`adapters/transformers/`**: Application services. Pure DataFrame transformations (filter, join, compute revenue, aggregate). They implement `TransformerPort` but encode business rules, remaining stateless with respect to the input DataFrame.
+- **`pipeline/transformers/`**: Application services. Pure DataFrame transformations (filter, join, compute revenue, aggregate). They implement `TransformerPort` but encode business rules, remaining stateless with respect to the input DataFrame.
 - **`pipeline/use_cases/`**: Contains the core orchestrator (`main_pipeline.py`) that executes the ETL steps via injected dependencies.
 - **`main.py`**: The Entry Point and Composition Root. It initializes dependencies and injects them into the Use Case.
 
