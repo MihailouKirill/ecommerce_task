@@ -5,3 +5,6 @@ __pycache__/
 .git
 .pytest_cache/
 tests/
+reports/*
+!reports/.gitkeep
+data/

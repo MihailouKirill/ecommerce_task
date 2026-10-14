@@ -1,0 +1,21 @@
+category,customer_segment,total_revenue,units_sold,unique_customers
+Books,Lapsed,285908.26,1216,28
+Books,New,250916.1,1074,24
+Books,Regular,211330.63,845,21
+Books,VIP,250897.26,1088,27
+Clothing,Lapsed,224171.69,1394,28
+Clothing,New,183231.05,1189,24
+Clothing,Regular,168921.31,992,21
+Clothing,VIP,209971.7,1334,27
+Electronics,Lapsed,276421.32,950,28
+Electronics,New,195441.47,691,24
+Electronics,Regular,211358.82,715,21
+Electronics,VIP,229590.16,805,27
+Home & Garden,Lapsed,137583.5,503,28
+Home & Garden,New,128526.61,456,24
+Home & Garden,Regular,102445.1,359,21
+Home & Garden,VIP,128987.93,493,26
+Sports & Outdoors,Lapsed,255757.82,984,28
+Sports & Outdoors,New,200857.78,850,24
+Sports & Outdoors,Regular,182988.11,746,21
+Sports & Outdoors,VIP,253745.41,1024,27

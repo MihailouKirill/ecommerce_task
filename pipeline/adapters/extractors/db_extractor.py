@@ -7,19 +7,19 @@ from collections.abc import Generator
 
 import pandas as pd
 
-from pipeline.ports.database_connection import DataBaseConnection
-from pipeline.ports.extractor import BaseExtractor
+from pipeline.application.ports import IDataBaseConnectionPort
+from pipeline.application.ports.extractor import IBaseExtractorPort
 
 logger = logging.getLogger(__name__)
 
 
-class DBExtractor(BaseExtractor):
+class DBExtractor(IBaseExtractorPort):
     """
     Extracts data from a database by executing a SQL query.
     """
 
     def __init__(
-        self, db_manager: DataBaseConnection, query: str, batch_size: int
+        self, db_manager: IDataBaseConnectionPort, query: str, batch_size: int
     ) -> None:
         """
         Initializes the database extractor.
@@ -41,6 +41,7 @@ class DBExtractor(BaseExtractor):
             pd.DataFrame: A chunk of data from the database.
 
         """
+        logger.info("Executing database query: %s", self.query)
         with self.db_manager as connection:
             try:
                 chunks = pd.read_sql(self.query, connection, chunksize=self.batch_size)
@@ -48,6 +49,6 @@ class DBExtractor(BaseExtractor):
                     logger.info(f"Extracting batch : {chunk}")
                     yield chunk
 
-            except Exception as e:
-                logger.exception(f"{e}")
+            except Exception:
+                logger.exception("Failed to extract data from database.")
                 raise

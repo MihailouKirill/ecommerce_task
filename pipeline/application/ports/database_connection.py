@@ -3,7 +3,7 @@ from types import TracebackType
 from typing import Any
 
 
-class DataBaseConnection(ABC):
+class IDataBaseConnectionPort(ABC):
     """
     Port for database connection context manager.
     """

@@ -2,24 +2,27 @@
 File extraction adapter.
 """
 
+import logging
 from collections.abc import Generator
 
 import pandas as pd
 
-from pipeline.ports.batcher import BatcherPort
-from pipeline.ports.extractor import BaseExtractor
-from pipeline.ports.parser import BaseParser
-from pipeline.ports.readers import FileReaderPort
+from pipeline.application.ports import IFileReaderPort
+from pipeline.application.ports.batcher import IBatcherPort
+from pipeline.application.ports.extractor import IBaseExtractorPort
+from pipeline.application.ports.parser import IBaseParserPort
+
+logger = logging.getLogger(__name__)
 
 
-class FileExtractor(BaseExtractor):
+class FileExtractor(IBaseExtractorPort):
     """
     Reads data from files and yields it in batches as pandas DataFrames.
     Not tied to any specific source — works through ports only.
     """
 
     def __init__(
-        self, opener: FileReaderPort, parser: BaseParser, batcher: BatcherPort
+        self, opener: IFileReaderPort, parser: IBaseParserPort, batcher: IBatcherPort
     ) -> None:
         """
         Initializes the FileExtractor with required dependencies.
@@ -40,6 +43,7 @@ class FileExtractor(BaseExtractor):
         Yields:
             pd.DataFrame:a batched DataFrame ready for transformation.
         """
+        logger.info("Starting file extraction stream...")
         single_dfs = (self.parser.parse(stream) for stream in self.opener.open())
 
         yield from self.batcher.batch(single_dfs)

@@ -9,7 +9,7 @@ import pandas as pd
 from numpy import nan
 from pandas.testing import assert_frame_equal
 
-from pipeline.transformers import (
+from pipeline.domain.transformers import (
     AggregateTransform,
     FinalTransformer,
     JoinTransformer,
@@ -202,7 +202,7 @@ def test_final_transformer():
     fake_raw_df = pd.DataFrame(
         {
             "category": ["Electronics", "Electronics", "Electronics", "Books"],
-            "segment": ["VIP", "VIP", "VIP", "New"],
+            "customer_segment": ["VIP", "VIP", "VIP", "New"],
             "customer_id": [1, 1, 2, 3],
             "total_revenue": [100.55, 50.11, 200.00, 30.00],
             "units_sold": [2, 1, 3, 1],
@@ -218,6 +218,34 @@ def test_final_transformer():
         }
     )
     transformer = FinalTransformer()
-    result = transformer(fake_raw_df)
+    result = transformer([fake_raw_df])
 
     assert_frame_equal(result, expected_df)
+
+
+def make_chunk(customer_id: str, revenue: float = 10.0, units: int = 1) -> pd.DataFrame:
+    return pd.DataFrame(
+        [
+            {
+                "category": "Books",
+                "customer_segment": "VIP",
+                "customer_id": customer_id,
+                "total_revenue": revenue,
+                "units_sold": units,
+            }
+        ]
+    )
+
+
+def test_final_transformer_works_with_one_shot_iterator():
+    def gen():
+        yield make_chunk("c1")
+        yield make_chunk("c1")  # the same client in a different batch
+        yield make_chunk("c2")
+
+    result = FinalTransformer()(gen())
+
+    row = result.iloc[0]
+    assert row["total_revenue"] == 30.0
+    assert row["units_sold"] == 3
+    assert row["unique_customers"] == 2  # c1 is not counted twice

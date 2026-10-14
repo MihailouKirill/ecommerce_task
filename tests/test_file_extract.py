@@ -13,10 +13,10 @@ import pandas as pd
 import pytest
 
 from pipeline.adapters.extractors import FileExtractor
-from pipeline.ports import BaseParser, BatcherPort, FileReaderPort
+from pipeline.application.ports import IBaseParserPort, IBatcherPort, IFileReaderPort
 
 
-class FakeOpener(FileReaderPort):
+class FakeOpener(IFileReaderPort):
     """
     Fake file opener that yields byte streams.
     """
@@ -27,7 +27,7 @@ class FakeOpener(FileReaderPort):
         yield BytesIO(b"Fake data3")
 
 
-class FakeParser(BaseParser):
+class FakeParser(IBaseParserPort):
     """
     Fake parser that returns a predefined DataFrame.
     """
@@ -36,7 +36,7 @@ class FakeParser(BaseParser):
         return pd.DataFrame({"col1": [1, 2]})
 
 
-class FakeBatcher(BatcherPort):
+class FakeBatcher(IBatcherPort):
     """
     Fake batcher that groups DataFrames based on a batch size.
     """
@@ -57,7 +57,7 @@ class FakeBatcher(BatcherPort):
             yield pd.concat(bucket, ignore_index=True)
 
 
-class BrokenFakeParser(BaseParser):
+class BrokenFakeParser(IBaseParserPort):
     """
     Fake parser simulating a failure during file parsing.
     """

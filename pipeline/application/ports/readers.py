@@ -3,7 +3,7 @@ from collections.abc import Iterator
 from typing import IO
 
 
-class FileReaderPort(ABC):
+class IFileReaderPort(ABC):
     """
     Port for file reading operations.
     """
