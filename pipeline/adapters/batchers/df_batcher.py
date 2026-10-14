@@ -1,11 +1,15 @@
+import logging
 from collections.abc import Generator, Iterable
+from itertools import batched
 
 import pandas as pd
 
-from pipeline.ports.batcher import BatcherPort
+from pipeline.application.ports.batcher import IBatcherPort
+
+logger = logging.getLogger(__name__)
 
 
-class DFBatcher(BatcherPort):
+class DFBatcher(IBatcherPort[pd.DataFrame]):
     """
     Groups individual pandas DataFrames into batches of size batch_size.
     """
@@ -21,7 +25,7 @@ class DFBatcher(BatcherPort):
 
     def batch(self, items: Iterable[pd.DataFrame]) -> Generator[pd.DataFrame]:
         """
-        Takes a iterable of  DataFrames and batches them.
+        Takes an iterable of  DataFrames and batches them.
 
         Args:
             items: An iterable stream of single DataFrames.
@@ -29,13 +33,13 @@ class DFBatcher(BatcherPort):
         Yields:
             pd.DataFrame:A concatenated batched DataFrame.
         """
-        bucket = []
-        for item in items:
-            bucket.append(item)
-
-            if len(bucket) == self.batch_size:
-                yield pd.concat(bucket, ignore_index=True)
-                bucket.clear()
-
-        if bucket:
-            yield pd.concat(bucket, ignore_index=True)
+        for batch in batched(items, self.batch_size):
+            merged = pd.concat(batch, ignore_index=True)
+            logger.debug(
+                "Batched %d DataFrames into single chunk of %d rows",
+                len(batch),
+                len(merged),
+            )
+            del batch
+            yield merged
+            del merged

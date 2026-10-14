@@ -1,9 +1,9 @@
 import pandas as pd
 
-from pipeline.ports.transformer import TransformerPort
+from pipeline.domain.ports.transformer import ITransformerPort
 
 
-class JoinTransformer(TransformerPort):
+class JoinTransformer(ITransformerPort):
     """
     Joins event data with reference datasets(products and customers).
     """
@@ -19,16 +19,16 @@ class JoinTransformer(TransformerPort):
         self.products_df = products_df
         self.customers_df = customers_df
 
-    def __call__(self, events_df: pd.DataFrame) -> pd.DataFrame:
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Enriches events with product and customer reference data.
 
         Args:
-            events_df:DataFrame containing event data.
+            data:DataFrame containing event data.
 
         Returns:
             pd.DataFrame: The enriched DataFrame.
         """
-        joined_df = pd.merge(events_df, self.products_df, on="product_id", how="left")
+        joined_df = pd.merge(data, self.products_df, on="product_id", how="left")
         joined_df = pd.merge(joined_df, self.customers_df, on="customer_id", how="left")
         return joined_df

@@ -3,7 +3,7 @@ from collections.abc import Generator
 from typing import Any
 
 
-class BaseExtractor[T](ABC):
+class IBaseExtractorPort[T](ABC):
     """
     Port for extracting data from external sources .
     """

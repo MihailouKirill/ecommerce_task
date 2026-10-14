@@ -8,6 +8,7 @@ and rollbacks on failure.
 from unittest.mock import MagicMock, patch
 
 import pytest
+from sqlalchemy import text
 
 from pipeline.adapters.database.postgres_connection import DataBasePostgreSQLConnection
 
@@ -46,8 +47,14 @@ def test_success_connection(
     mock_create_engine.return_value = mock_engine
     mock_engine.connect.return_value = mock_conn
 
-    with DataBasePostgreSQLConnection(fake_settings) as connection:
-        connection.execute("SELECT * FROM products LIMIT 5")
+    with DataBasePostgreSQLConnection(
+        db_host=fake_settings.db_host,
+        db_port=fake_settings.db_port,
+        db_user=fake_settings.db_user,
+        db_password=fake_settings.db_password,
+        db_name=fake_settings.db_name,
+    ) as connection:
+        connection.execute(text("SELECT * FROM products LIMIT 5"))
 
     mock_conn.commit.assert_called_once()
     mock_conn.rollback.assert_not_called()
@@ -70,7 +77,16 @@ def test_failure_connection(
 
     mock_create_engine.return_value = mock_engine
     mock_engine.connect.return_value = mock_conn
-    with pytest.raises(ValueError), DataBasePostgreSQLConnection(fake_settings):
+    with (
+        pytest.raises(ValueError),
+        DataBasePostgreSQLConnection(
+            db_host=fake_settings.db_host,
+            db_port=fake_settings.db_port,
+            db_user=fake_settings.db_user,
+            db_password=fake_settings.db_password,
+            db_name=fake_settings.db_name,
+        ),
+    ):
         raise ValueError
 
     mock_conn.commit.assert_not_called()

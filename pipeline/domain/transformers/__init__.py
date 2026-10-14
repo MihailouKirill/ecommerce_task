@@ -1,9 +1,9 @@
 """
 DataFrame transformers for the ETL pipeline.
 
-Each transformer performs a single, distinct step
-in the ETL pipeline, such as filtering events, calculating revenue,
-joining reference data, or aggregating final table.
+Each transformer performs a single, distinct step in the ETL pipeline,
+such as filtering purchase events, calculating total revenue, joining
+reference dimensions, or aggregating data into the final report.
 """
 
 from .aggregate_transform import AggregateTransform
@@ -12,7 +12,7 @@ from .join_transformer import JoinTransformer
 from .revenue_transformer import RevenueTransformer
 from .sales_transformer import PurchasesTransformer
 
-__all__ = [
+__all__: list[str] = [
     "AggregateTransform",
     "FinalTransformer",
     "JoinTransformer",

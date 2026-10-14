@@ -1,13 +1,14 @@
 from abc import ABC, abstractmethod
 
 
-class QueryValidatorPort(ABC):
+class IQueryValidatorPort(ABC):
     """
     Port for validating SQL queries before execution.
     """
 
+    @staticmethod
     @abstractmethod
-    def validate_query(self, query: str) -> str:
+    def validate_query(query: str) -> str:
         """
         Validates and returns the cleaned SQL query.
         """

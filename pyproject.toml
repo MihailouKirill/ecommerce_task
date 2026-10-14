@@ -13,7 +13,12 @@ dependencies = [
     "pytest>=9.1.1",
     "ruff>=0.16.9",
     "sqlalchemy>=2.1.1",
+    "ty>=0.0.85",
 ]
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["pipeline*"]
+[tool.ruff]
+exclude = [
+    "data_generator.py",
+]

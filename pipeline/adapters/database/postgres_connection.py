@@ -4,15 +4,14 @@ from types import TracebackType
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
 
-from pipeline.config import Settings
-from pipeline.ports.database_connection import DataBaseConnection
+from pipeline.application.ports import IDataBaseConnectionPort
 
 logger = logging.getLogger(__name__)
 
 
-class DataBasePostgreSQLConnection(DataBaseConnection):
+class DataBasePostgreSQLConnection(IDataBaseConnectionPort):
     """
-    Creating  context manager for connecting to the Docker's PostgreSQL database.
+    Creates  context manager for connecting to the Docker's PostgreSQL database.
 
     This Class takes the settings parameters , and manages the database
     connection lifecycle (connects on enter , close on exit).
@@ -23,12 +22,10 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
         settings_param(Settings): Database settings passed from the config file.
     """
 
-    def __init__(self, settings_param: Settings) -> None:
-        self.db_url = (
-            f"postgresql+psycopg2://{settings_param.db_user}:"
-            f"{settings_param.db_password}@{settings_param.db_host}:"
-            f"{settings_param.db_port}/{settings_param.db_name}"
-        )
+    def __init__(
+        self, db_host: str, db_port: int, db_user: str, db_password: str, db_name: str
+    ) -> None:
+        self.db_url = f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
         self.engine: Engine = create_engine(self.db_url)
         self.connection: Connection | None = None
 
@@ -41,8 +38,7 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
         """
         self.connection = self.engine.connect()
 
-        logger.info("Successfully connected to Database")
-
+        logger.info("Successfully connected to PostgreSQL Database")
         return self.connection
 
     def __exit__(
@@ -59,14 +55,17 @@ class DataBasePostgreSQLConnection(DataBaseConnection):
             exc_val: copy of exception.
             exc_tb: contains info about  the call stack.
         """
-        try:
-            if exc_type is None:
-                logger.info("Commiting transaction")
-                self.connection.commit()
-            else:
-                logger.warning(
-                    f"Error something wrong with connection :{exc_type.__name__}"
-                )
-                self.connection.rollback()
-        finally:
-            self.connection.close()
+        if self.connection is not None:
+            try:
+                if exc_type is None:
+                    logger.debug("Commiting transaction")
+                    self.connection.commit()
+                else:
+                    logger.warning(
+                        "Error occurred during DB transaction (%s), rolling back",
+                        exc_type.__name__,
+                    )
+                    self.connection.rollback()
+            finally:
+                self.connection.close()
+                logger.info("Closed PostgreSQL Database connection")

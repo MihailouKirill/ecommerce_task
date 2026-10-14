@@ -11,21 +11,29 @@ services:
     volumes:
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U myuser -d ecommerce_db"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
 
   etl_pipeline:
     build: .
     container_name: etl_app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: myuser
       DB_PASSWORD: mypassword
       DB_NAME: ecommerce_db
-      BATCH_SIZE: 100
+      BATCH_SIZE: 50
     volumes:
       - ./reports:/app/reports
+      - ./data:/app/data
+
 
 volumes:
   postgres-data:

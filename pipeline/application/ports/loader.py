@@ -1,18 +1,16 @@
 from abc import ABC, abstractmethod
 
-import pandas as pd
 
-
-class LoaderPort(ABC):
+class ILoaderPort[T](ABC):
     """
     Port for data loading operations.
     """
 
     @abstractmethod
-    def load(self, df: pd.DataFrame) -> None:
+    def load(self, data: T) -> None:
         """
         Saves the final DataFrame.
 
         Args:
-            df:Processed DataFrame to save.
+            data:Processed DataFrame to save.
         """

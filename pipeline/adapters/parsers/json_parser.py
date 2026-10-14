@@ -2,10 +2,10 @@ from typing import IO
 
 import pandas as pd
 
-from pipeline.ports.parser import BaseParser
+from pipeline.application.ports.parser import IBaseParserPort
 
 
-class PandasJsonParser(BaseParser):
+class PandasJsonParser(IBaseParserPort):
     """
     Parses JSON file streams into pandas DataFrames.
     """
